@@ -2,9 +2,9 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import HelloWorld from '@/components/HelloWorld';
 import Login from '@/components/Login';
-// import Register from '@/components/Register';
-// import UserBoard from '@/components/UserBoard';
-// import Admin from '@/components/Admin';
+import Register from '@/components/Register';
+import UserBoard from '@/components/UserBoard';
+import Admin from '@/components/Admin';
 
 Vue.use(Router);
 
@@ -25,34 +25,34 @@ const router = new Router({
         guest: true,
       },
     },
-    // {
-    //   path: '/register',
-    //   name: 'register',
-    //   component: Register,
-    //   meta: {
-    //     // guest makes sure that unauthenticated users only see these routes
-    //     guest: true,
-    //   },
-    // },
-    // {
-    //   path: '/dashboard',
-    //   name: 'userboard',
-    //   component: UserBoard,
-    //   meta: {
-    //     // requiresAuth makes sure that only authenticated users should see this page
-    //     requiresAuth: true,
-    //   },
-    // },
-    // {
-    //   path: '/admin',
-    //   name: 'admin',
-    //   component: Admin,
-    //   meta: {
-    //     // is_admin ensures that only admin users see this route
-    //     requiresAuth: true,
-    //     is_admin: true,
-    //   },
-    // },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register,
+      meta: {
+        // guest makes sure that unauthenticated users only see these routes
+        guest: true,
+      },
+    },
+    {
+      path: '/dashboard',
+      name: 'userboard',
+      component: UserBoard,
+      meta: {
+        // requiresAuth makes sure that only authenticated users should see this page
+        requiresAuth: true,
+      },
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: Admin,
+      meta: {
+        // is_admin ensures that only admin users see this route
+        requiresAuth: true,
+        is_admin: true,
+      },
+    },
   ],
 });
   // The beforeEach method is called before each route is processed. The three parameters passed to it are to, from, and next.

@@ -1,6 +1,6 @@
 // This is a node server where we store everything to make the node backend.
 const express = require('express');
-const DB = require('db');
+const DB = require('./db');
 const config = require('./config');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -35,19 +35,19 @@ router.post('/register', (request, res) => {
     bcrypt.hash(request.body.password, 8),
   ],
   (err) => {
-    if (err) return res.status(500).send('There was a problem registering the user')
+    if (err) return res.status(500).send('There was a problem registering the user');
     // a error code of 500 means something has gone wrong with the website's server
-    db.selectByEmail(request.body.email,), (err, user) => {
-      if(err) return res.status(500).send("There was a problem getting user")
-      let token = jwt.sign({ id: user.id }, config.secret, { expiresIn: 86400});
-      res.status(200).send({ auth: true, token: token, user: user});
-    });
+    db.selectByEmail(request.body.email ), (err, user) => {
+      if (err) return res.status(500).send('There was a problem getting user');
+      const token = jwt.sign({ id: user.id }, config.secret, { expiresIn: 86400 });
+      res.status(200).send({ auth: true, token, user });
+    };
   });
 });
 
 // Below is the route for registering an administrator and loggin in
 
-rrouter.post('/register-admin', function(request, res) {
+router.post('/register-admin', (request, res) => {
     db.insertAdmin([
         request.body.name,
         request.body.email,
@@ -67,23 +67,23 @@ rrouter.post('/register-admin', function(request, res) {
 
 // This says that if the request email is not found then return not found, if the email is found then compare the request password against the password in the database. If there is a match, then create a token and pass back the user, token, and an auth prop set to true.
 router.post('/login', (request, res) => {
-    db.selectByEmail(request.body.email, (err, user) => {
-        if (err) return res.status(500).send('Error on the server.');
-        if (!user) return res.status(404).send('No user found.');
-        let passwordIsValid = bcrypt.compareSync(request.body.password, user.user_pass);
-        if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
-        let token = jwt.sign({ id: user.id }, config.secret, { expiresIn: 86400 // expires in 24 hours
-        });
-        res.status(200).send({ auth: true, token: token, user: user });
+  db.selectByEmail(request.body.email, (err, user) => {
+    if (err) return res.status(500).send('Error on the server.');
+    if (!user) return res.status(404).send('No user found.');
+    const passwordIsValid = bcrypt.compareSync(request.body.password, user.user_pass);
+    if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
+    const token = jwt.sign({ id: user.id }, config.secret, { expiresIn: 86400, // expires in 24 hours
     });
-})
+    res.status(200).send({ auth: true, token, user });
+  });
+});
 
 // Create the express server below:
 
-app.use(router)
+app.use(router);
 
-let port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
-let server = app.listen(port, function() {
+const server = app.listen(port, () => {
   console.log('Express server listening on port: ', port)
 });
