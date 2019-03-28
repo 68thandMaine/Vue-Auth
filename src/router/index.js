@@ -6,69 +6,65 @@ import Register from '@/components/Register';
 import UserBoard from '@/components/UserBoard';
 import Admin from '@/components/Admin';
 
-Vue.use(Router);
+Vue.use(Router)
 
 const router = new Router({
   mode: 'history',
   routes: [
-    {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld,
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: Login,
-      meta: {
-        // guest makes sure that unauthenticated users only see these routes
-        guest: true,
+      {
+          path: '/',
+          name: 'HelloWorld',
+          component: HelloWorld
       },
-    },
-    {
-      path: '/register',
-      name: 'register',
-      component: Register,
-      meta: {
-        // guest makes sure that unauthenticated users only see these routes
-        guest: true,
+      {
+          path: '/login',
+          name: 'login',
+          component: Login,
+          meta: {
+              guest: true
+          }
       },
-    },
-    {
-      path: '/dashboard',
-      name: 'userboard',
-      component: UserBoard,
-      meta: {
-        // requiresAuth makes sure that only authenticated users should see this page
-        requiresAuth: true,
+      {
+          path: '/register',
+          name: 'register',
+          component: Register,
+          meta: {
+              guest: true
+          }
       },
-    },
-    {
-      path: '/admin',
-      name: 'admin',
-      component: Admin,
-      meta: {
-        // is_admin ensures that only admin users see this route
-        requiresAuth: true,
-        is_admin: true,
+      {
+          path: '/dashboard',
+          name: 'userboard',
+          component: UserBoard,
+          meta: {
+              requiresAuth: true
+          }
       },
-    },
-  ],
-});
+      {
+          path: '/admin',
+          name: 'admin',
+          component: Admin,
+          meta: {
+              requiresAuth: true,
+              is_admin : true
+          }
+      },
+  ]
+})
   // The beforeEach method is called before each route is processed. The three parameters passed to it are to, from, and next.
   // To is where the user wishes to go
   // From is where the user is coming from
   // Next is a callback funtion that continues the processing order of the request
-router.beforeEach((to, from, next) => {
+  router.beforeEach((to, from, next) => {
   // First conditional checks for a JSON web token
-  if (to.matched.some(record => record.meta.requiresAuth)) {
+  if(to.matched.some(record => record.meta.requiresAuth)) {
     if (localStorage.getItem('jwt') == null) {
       next({
         path: '/login',
-        params: { nextUrl: to.fullPath },
-      });
+        params: { nextUrl: to.fullPath }
+      })
     } else {
-      const user = JSON.parse(localStorage.getItem('user'));
+      let user = JSON.parse(localStorage.getItem('user'));
       if (to.matched.some(record => record.meta.is_admin)) {
         if (user.is_admin == 1) {
           next();
@@ -79,7 +75,7 @@ router.beforeEach((to, from, next) => {
         next();
       }
     }
-  } else if (to.matched.some(record = record.meta.guest)) {
+  } else if (to.matched.some(record => record.meta.guest)) {
     if (localStorage.getItem('jwt') == null) {
       next();
     } else {

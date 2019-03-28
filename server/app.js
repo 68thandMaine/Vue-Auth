@@ -37,7 +37,7 @@ router.post('/register', (request, res) => {
   (err) => {
     if (err) return res.status(500).send('There was a problem registering the user');
     // a error code of 500 means something has gone wrong with the website's server
-    db.selectByEmail(request.body.email ), (err, user) => {
+    db.selectByEmail(request.body.email), (err, user) => {
       if (err) return res.status(500).send('There was a problem getting user');
       const token = jwt.sign({ id: user.id }, config.secret, { expiresIn: 86400 });
       res.status(200).send({ auth: true, token, user });
@@ -48,13 +48,13 @@ router.post('/register', (request, res) => {
 // Below is the route for registering an administrator and loggin in
 
 router.post('/register-admin', (request, res) => {
-    db.insertAdmin([
-        request.body.name,
-        request.body.email,
-        bcrypt.hashSync(request.body.password, 8),
-        1
-    ],
-    function (err) {
+  db.insertAdmin([
+    request.body.name,
+    request.body.email,
+    bcrypt.hashSync(request.body.password, 8),
+    1,
+  ],
+  (err) => {
         if (err) return res.status(500).send("There was a problem registering the user.")
         db.selectByEmail(request.body.email, (err,user) => {
             if (err) return res.status(500).send("There was a problem getting user")
@@ -85,5 +85,5 @@ app.use(router);
 const port = process.env.PORT || 3000;
 
 const server = app.listen(port, () => {
-  console.log('Express server listening on port: ', port)
+  console.log('Express server listening on port: ', port);
 });

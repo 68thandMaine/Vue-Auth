@@ -1,4 +1,4 @@
-6<template>
+<template>
   <div class="hello">
     <h2>This is the homepage</h2>
     <h1>{{ msg }}</h1>

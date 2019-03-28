@@ -2,7 +2,7 @@
   <div>
     <h4>Register</h4>
     <form>
-      <label for'name'>Name</label>
+      <label for='name'>Name</label>
       <div>
         <input id='name' type='text' v-model='name' required autofocus>
       </div>
@@ -36,11 +36,13 @@
 export default {
   props: ['nextURL'],
   data(){
+    return {
     name: '',
     email: '',
     password: '',
     confirm_password: '',
     is_admin: null,
+    }
   },
   methods: {
     handleSubmit(){
